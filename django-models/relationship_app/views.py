@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseForbidden
+from django.contrib.auth import login
 from .forms import BookForm
 
 from .models import Book
