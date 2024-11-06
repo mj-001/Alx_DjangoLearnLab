@@ -17,26 +17,26 @@ from .models import Library
 # Create your views here.
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'relationship_app/list_books.html', {'books': books})
+    return render(request, 'relationship_app/templates/list_books.html', {'books': books})
 
 
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'relationship_app/library_detail.html'
+    template_name = 'relationship_app/templates/library_detail.html'
 
 
 # User Login View (built-in)
 class UserLoginView(LoginView):
-    template_name = 'relationship_app/login.html'
+    template_name = 'relationship_app/templates/login.html'
 
 # User logout View (built-in)
 class UserLogoutView(LogoutView):
-    template_name = 'relationship_app/login.html'
+    template_name = 'relationship_app/templates/login.html'
 
 
 class UserRegisterView(CreateView):
     form_class = UserCreationForm
-    template_name = 'relationship_app/register.html'
+    template_name = 'relationship_app/templates/register.html'
     success_url = reverse_lazy('login')
 
 
@@ -53,19 +53,19 @@ def is_member(user):
 # Admin View
 @user_passes_test(is_admin)
 def admin_view(request):
-    return render(request, 'admin_view.html')
+    return render(request, 'templates/admin_view.html')
 
 
 # Librarian View
 @user_passes_test(is_librarian)
 def librarian_view(request):
-    return render(request, 'librarian_view.html')
+    return render(request, 'templates/librarian_view.html')
 
 
 # Member View
 @user_passes_test(is_member)
 def member_view(request):
-    return render(request,'member_view.html')
+    return render(request,'templates/member_view.html')
 
 
 # Add Book View
@@ -78,7 +78,7 @@ def add_book(request):
             return redirect('list_books')
     else:
         form = BookForm()
-    return render(request, 'add_book.html', {'form': form})
+    return render(request, 'templates/add_book.html', {'form': form})
 
 
 # Edit Book View
@@ -92,7 +92,7 @@ def edit_book(request, pk):
             return redirect('book_detail', pk=book.id)
     else:
         form = BookForm(instance=book)
-    return render(request, 'edit_book.html', {'form': form, 'book': book})
+    return render(request, 'templates/edit_book.html', {'form': form, 'book': book})
 
 
 # Delete Book View
@@ -102,7 +102,7 @@ def delete_book(request, pk):
     if request.method == 'POST':
         book.delete()
         return redirect('list_books')
-    return render(request, 'delete_book.html', {'book': book})
+    return render(request, 'templates/delete_book.html', {'book': book})
 
 def register(request):
     if request.method == 'POST':
@@ -113,4 +113,4 @@ def register(request):
             return redirect('login')  # Redirect to login page
     else:
         form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
+    return render(request, 'relationship_app/templates/register.html', {'form': form})
