@@ -11,7 +11,7 @@ urlpatterns = [
     path('logout/', views.UserLogoutView.as_view(template_name='relationship_app/templates/logout.html'), name='logout'),
 
     # Registration URL
-    path('register/', views.UserRegisterView.as_view(), name='register'),
+    path('register/', views.register, name='register'),
 
     # Additional view URLs
     path('admin_view/', views.admin_view, name='admin_view'),

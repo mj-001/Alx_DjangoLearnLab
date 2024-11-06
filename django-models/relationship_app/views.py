@@ -103,3 +103,14 @@ def delete_book(request, pk):
         book.delete()
         return redirect('list_books')
     return render(request, 'delete_book.html', {'book': book})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log in the user after registration
+            return redirect('login')  # Redirect to login page
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
