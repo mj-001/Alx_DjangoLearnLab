@@ -1,6 +1,3 @@
-
-python ../manage.py shell
-
 from .models import Author, Book, Library, Librarian
 
 # Query all books by a specific author
