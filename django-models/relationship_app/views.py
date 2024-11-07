@@ -8,12 +8,12 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth import login
 from .forms import BookForm
-from .models import Book
+from .models import Book,
 from .models import Library
 
 # Helper functions for role checks
 def user_is_admin(user):
-    return user.userprofile.role == 'Admin'
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
 def user_is_librarian(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
