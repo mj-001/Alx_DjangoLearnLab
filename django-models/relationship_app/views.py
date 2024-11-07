@@ -121,3 +121,28 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     template_name = 'logout.html'
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+
+# Helper function to check user role
+def user_is_admin(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+def user_is_librarian(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+def user_is_member(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+@user_passes_test(user_is_admin)
+def admin_view(request):
+    return render(request, 'admin_view.html')
+
+@user_passes_test(user_is_librarian)
+def librarian_view(request):
+    return render(request, 'librarian_view.html')
+
+@user_passes_test(user_is_member)
+def member_view(request):
+    return render(request, 'member_view.html')
