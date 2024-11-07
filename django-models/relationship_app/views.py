@@ -13,7 +13,7 @@ from .models import Library
 
 # Helper functions for role checks
 def user_is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+    return user.userprofile.role == 'Admin'
 
 def user_is_librarian(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
