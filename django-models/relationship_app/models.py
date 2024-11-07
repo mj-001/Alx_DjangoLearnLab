@@ -3,12 +3,21 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# Create your models here.
+# Define roles as a tuple of choices
+ROLE_CHOICES = [
+    ('Admin', 'Admin'),
+    ('Librarian', 'Librarian'),
+    ('Member', 'Member'),
+]
+
+# Models
+
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -19,37 +28,27 @@ class Book(models.Model):
 
     class Meta:
         permissions = [
-            ("can_add_book", "can add book"),
-            ("can_change_book", "can change book"),
-            ("can_delete_book", "can delete book"),
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"),
+            ("can_delete_book", "Can delete book"),
         ]
 
 
 class Library(models.Model):
     name = models.CharField(max_length=100)
-    books = models.ManyToManyField(Book)
+    books = models.ManyToManyField(Book, blank=True)  # Allow libraries to have books added later
 
     def __str__(self):
         return self.name
 
 
 class Librarian(models.Model):
-    name = models.CharField(max_length=100)
-    library = models.OneToOneField(Library, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Connect to the User model
+    library = models.ForeignKey(Library, on_delete=models.CASCADE, related_name='librarians')
 
     def __str__(self):
-        return self.name
+        return f'{self.user.username} (Librarian at {self.library.name})'
 
-
-
-
-
-# Define roles as a tuple of choices
-ROLE_CHOICES = [
-    ('Admin', 'Admin'),
-    ('Librarian', 'Librarian'),
-    ('Member', 'Member'),
-]
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -58,7 +57,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.role}'
 
-# Signal to automatically create a UserProfile when a User is created
+# Signals to automatically create and save UserProfile when a User is created/updated
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -66,4 +65,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
+    if hasattr(instance, 'userprofile'):
+        instance.userprofile.save()
