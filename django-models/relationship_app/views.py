@@ -114,3 +114,10 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
+
+# Use Django's built-in views for login and logout
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+
+class CustomLogoutView(LogoutView):
+    template_name = 'logout.html'
