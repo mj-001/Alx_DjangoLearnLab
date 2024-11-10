@@ -44,7 +44,7 @@ def librarian_view(request):
 
 @user_passes_test(is_member)
 def member_view(request):
-    return render(request, 'relationship_app/memberview.html')
+    return render(request, 'relationship_app/member_view.html')
 
 # Permission-based views for book operations
 @permission_required('relationship_app.can_add_book')
