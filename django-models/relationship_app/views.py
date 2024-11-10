@@ -1,13 +1,14 @@
 # relationship_app/views.py
 
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Book, UserProfile
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from .models import Library
+from django.views.generic.detail import DetailView
 
 # Function-based view for listing books
 @login_required
