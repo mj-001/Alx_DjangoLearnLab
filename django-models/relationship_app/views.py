@@ -59,7 +59,7 @@ def delete_book(request, pk):
     return render(request, 'relationship_app/delete_book.html')
 
 # User Registration View
-class UserRegisterView(CreateView):
+def UserCreationForm():
     form_class = UserCreationForm  # Use Django's built-in UserCreationForm
     template_name = 'relationship_app/register.html'  # Link to the register.html template
     success_url = reverse_lazy('login')  # Redirect to login page after successful registration
