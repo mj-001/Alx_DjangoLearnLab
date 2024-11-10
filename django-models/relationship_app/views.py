@@ -5,6 +5,8 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Book, Library, UserProfile
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 # Function-based view for listing books
 @login_required
