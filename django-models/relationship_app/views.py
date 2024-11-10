@@ -1,6 +1,6 @@
 # relationship_app/views.py
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -57,3 +57,9 @@ def edit_book(request, pk):
 def delete_book(request, pk):
     # Delete book logic here
     return render(request, 'relationship_app/delete_book.html')
+
+# User Registration View
+class UserRegisterView(CreateView):
+    form_class = UserCreationForm  # Use Django's built-in UserCreationForm
+    template_name = 'relationship_app/register.html'  # Link to the register.html template
+    success_url = reverse_lazy('login')  # Redirect to login page after successful registration
