@@ -30,7 +30,7 @@ def is_librarian(user):
     return user.userprofile.role == 'LIBRARIAN'
 
 def is_member(user):
-    return user.userprofile.role == 'Member'
+    return user.userprofile.role == 'MEMBER'
 
 @user_passes_test(is_admin)
 def admin_view(request):
@@ -65,21 +65,3 @@ def UserCreationForm():
     form_class = UserCreationForm  # Use Django's built-in UserCreationForm
     template_name = 'relationship_app/register.html'  # Link to the register.html template
     success_url = reverse_lazy('login')  # Redirect to login page after successful registration
-
-    # User Registration View (Function-based)
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Log in the user after registration
-            return redirect('member_view')  # Redirect to the member view or login page
-    else:
-        form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
-
-# Member View (only accessible by users with 'Member' role)
-@login_required  # Ensure the user is logged in
-@user_passes_test(is_member)  # Ensure the user has the 'Member' role
-def member_view(request):
-    return render(request, 'relationship_app/member_dashboard.html')  # Render the 'member_dashboard.html' template
