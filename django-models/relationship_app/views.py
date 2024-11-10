@@ -30,7 +30,7 @@ def is_librarian(user):
     return user.userprofile.role == 'LIBRARIAN'
 
 def is_member(user):
-    return user.userprofile.role == 'MEMBER'
+    return user.userprofile.role == 'Member'
 
 @user_passes_test(is_admin)
 def admin_view(request):
