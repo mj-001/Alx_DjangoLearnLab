@@ -5,6 +5,7 @@ from django.http import HttpResponseForbidden
 from .models import Article
 from .models import Book
 from .forms import BookSearchForm
+from .forms import ExampleForm
 
 # Create your views here.
 
@@ -56,3 +57,22 @@ def search_books(request):
         books = Book.objects.filter(title__icontains=query)  # ORM handles SQL safely
 
     return render(request, 'bookshelf/book_list.html', {'form': form, 'books': books})
+
+
+def example_form_view(request):
+    """
+    Renders and processes the ExampleForm.
+    """
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Process form data
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            # Add your logic here (e.g., save to database, send email)
+            return render(request, 'bookshelf/form_success.html', {'name': name})
+    else:
+        form = ExampleForm()
+
+    return render(request, 'bookshelf/form_example.html', {'form': form})
