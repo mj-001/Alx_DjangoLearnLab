@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from .models import Article
+from .models import Book
 
 # Create your views here.
 
@@ -35,3 +36,11 @@ def article_delete(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.delete()
     return redirect('article_list')
+
+@permission_required('bookshelf.can_view_books', raise_exception=True)
+def book_list(request):
+    """
+    Displays a list of books. Requires the user to have the 'can_view_books' permission.
+    """
+    books = Book.objects.all()
+    return render(request, 'book_list.html', {'books': books})
