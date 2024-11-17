@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from .models import Article
 from .models import Book
+from .forms import BookSearchForm
 
 # Create your views here.
 
@@ -44,3 +45,14 @@ def book_list(request):
     """
     books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books})
+
+
+def search_books(request):
+    form = BookSearchForm(request.GET)
+    books = []
+
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        books = Book.objects.filter(title__icontains=query)  # ORM handles SQL safely
+
+    return render(request, 'bookshelf/book_list.html', {'form': form, 'books': books})
