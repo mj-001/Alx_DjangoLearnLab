@@ -6,12 +6,12 @@ from .models import Article
 
 # Create your views here.
 
-@permission_required('your_app_name.can_view', raise_exception=True)
+@permission_required('bookshelf.can_view', raise_exception=True)
 def article_list(request):
     articles = Article.objects.all()
     return render(request, 'article_list.html', {'articles': articles})
 
-@permission_required('your_app_name.can_create', raise_exception=True)
+@permission_required('bookshelf.can_create', raise_exception=True)
 def article_create(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -20,7 +20,7 @@ def article_create(request):
         return redirect('article_list')
     return render(request, 'article_form.html')
 
-@permission_required('your_app_name.can_edit', raise_exception=True)
+@permission_required('bookshelf.can_edit', raise_exception=True)
 def article_edit(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if request.method == 'POST':
@@ -30,7 +30,7 @@ def article_edit(request, pk):
         return redirect('article_list')
     return render(request, 'article_form.html', {'article': article})
 
-@permission_required('your_app_name.can_delete', raise_exception=True)
+@permission_required('bookshelf.can_delete', raise_exception=True)
 def article_delete(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.delete()
