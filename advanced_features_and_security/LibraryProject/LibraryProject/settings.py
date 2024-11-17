@@ -173,3 +173,20 @@ CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
 X_FRAME_OPTIONS = "DENY"  # Prevent clickjacking by disallowing framing
 SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-sniffing
 SECURE_BROWSER_XSS_FILTER = True  # Enable XSS protection in browsers
+
+# Enforce HTTPS to protect data in transit
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS) configuration
+SECURE_HSTS_SECONDS = 31536000  # Max-Age for HSTS
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include subdomains in HSTS
+SECURE_HSTS_PRELOAD = True  # Preload HSTS for browsers
+
+# Secure cookies
+SESSION_COOKIE_SECURE = True  # Prevent session cookies over insecure channels
+CSRF_COOKIE_SECURE = True  # Prevent CSRF cookies over insecure channels
+
+# Additional HTTP headers for security
+X_FRAME_OPTIONS = "DENY"  # Disallow framing for clickjacking prevention
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-sniffing attacks
+SECURE_BROWSER_XSS_FILTER = True  # Enable browser's XSS filtering
