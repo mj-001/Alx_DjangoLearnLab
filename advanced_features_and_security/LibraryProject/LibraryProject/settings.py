@@ -127,3 +127,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user model
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# settings.py
+
+import os
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False  # Set to True during development but False in production
+
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # Update with your domain
+
+# Security Headers
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enforce HTTPS
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookies are sent only over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookies are sent only over HTTPS
+
+# Content Security Policy (CSP) setup
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", 'cdnjs.cloudflare.com')  # Allow styles from self and specific CDNs
+CSP_SCRIPT_SRC = ("'self'", 'cdnjs.cloudflare.com')  # Allow scripts from self and specific CDNs
+
+# Additional Security
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+SECURE_HSTS_SECONDS = 3600  # Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
