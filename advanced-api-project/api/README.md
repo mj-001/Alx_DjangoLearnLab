@@ -32,3 +32,13 @@
 
 ### Examples
 - Get all books by "Jane Doe" published in 2023, ordered by title:
+
+
+## Testing the API
+
+Unit tests are implemented to ensure the correctness and reliability of the API.
+
+### Running the Tests
+Run the following command to execute the test suite:
+```bash
+python manage.py test api
