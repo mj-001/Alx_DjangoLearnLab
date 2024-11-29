@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'bookshelf',
     'relationship_app',
+    'advanced_api_project',
 ]
 
 MIDDLEWARE = [
