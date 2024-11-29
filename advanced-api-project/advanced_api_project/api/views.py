@@ -30,7 +30,7 @@ class BookCreateView(generics.CreateAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only authenticated users can creat
+    permission_classes = [permissions.IsAuthenticated]  # Only authenticated users can create
 
     def perform_create(self, serializer):
         """
