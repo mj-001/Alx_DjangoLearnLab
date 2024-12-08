@@ -11,6 +11,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
 ]
 
+
 urlpatterns = [
     path('', views.PostListView.as_view(), name='post_list'),
     path('post/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
@@ -33,5 +34,3 @@ urlpatterns = [
     path('tags/<slug:tag_slug>/', views.PostByTagListView.as_view(), name='posts_by_tag'),
     #path('tag/<str:tag_name>/', views.tagged_posts, name='tagged_posts'),
 ]
-
-
