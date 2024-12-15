@@ -13,6 +13,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_RE
 from .models import Post, Like
 from posts.models import Notification
 from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import get_object_or_404
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
@@ -55,15 +56,15 @@ class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = Post.objects.get(pk=pk)
+        # Fetch the post using get_object_or_404
+        post = get_object_or_404(Post, pk=pk)
         user = request.user
 
-        # Check if the user has already liked the post
-        if Like.objects.filter(post=post, user=user).exists():
-            return Response({"error": "You already liked this post"}, status=HTTP_400_BAD_REQUEST)
+        # Use get_or_create to ensure a like is created only if it doesn't already exist
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
-        # Create a like
-        Like.objects.create(post=post, user=user)
+        if not created:
+            return Response({"error": "You already liked this post"}, status=HTTP_400_BAD_REQUEST)
 
         # Create a notification for the post's author
         notification = Notification.objects.create(
@@ -81,11 +82,12 @@ class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = Post.objects.get(pk=pk)
+        # Fetch the post using get_object_or_404
+        post = get_object_or_404(Post, pk=pk)
         user = request.user
 
         # Check if the user has liked the post
-        like = Like.objects.filter(post=post, user=user).first()
+        like = Like.objects.get_or_create(user=request.user, post=post)
         if not like:
             return Response({"error": "You have not liked this post"}, status=HTTP_400_BAD_REQUEST)
 
@@ -93,25 +95,3 @@ class UnlikePostView(generics.GenericAPIView):
         like.delete()
 
         return Response({"message": "Post unliked successfully"}, status=HTTP_200_OK)
-
-
-class NotificationView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        notifications = Notification.objects.filter(recipient=request.user).order_by('-timestamp')
-        # Optionally, only return unread notifications
-        unread_notifications = notifications.filter(read=False)
-        
-        # Serialize and return notifications (assuming you have a NotificationSerializer)
-        serializer = NotificationSerializer(unread_notifications, many=True)
-        return Response(serializer.data)
-
-class MarkAsReadView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, pk):
-        notification = Notification.objects.get(pk=pk, recipient=request.user)
-        notification.read = True
-        notification.save()
-        return Response({"message": "Notification marked as read"}, status=HTTP_200_OK)
