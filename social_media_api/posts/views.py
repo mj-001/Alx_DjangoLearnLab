@@ -57,7 +57,7 @@ class LikePostView(generics.GenericAPIView):
 
     def post(self, request, pk):
         # Fetch the post using get_object_or_404
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         user = request.user
 
         # Use get_or_create to ensure a like is created only if it doesn't already exist
@@ -83,7 +83,7 @@ class UnlikePostView(generics.GenericAPIView):
 
     def post(self, request, pk):
         # Fetch the post using get_object_or_404
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         user = request.user
 
         # Check if the user has liked the post
