@@ -7,6 +7,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Post
 from .serializers import PostSerializer
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from .models import Post, Like
+from posts.models import Notification
+from django.contrib.contenttypes.models import ContentType
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
@@ -45,3 +51,67 @@ class FeedView(APIView):
     
 
 
+class LikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        user = request.user
+
+        # Check if the user has already liked the post
+        if Like.objects.filter(post=post, user=user).exists():
+            return Response({"error": "You already liked this post"}, status=HTTP_400_BAD_REQUEST)
+
+        # Create a like
+        Like.objects.create(post=post, user=user)
+
+        # Create a notification for the post's author
+        notification = Notification.objects.create(
+            recipient=post.author,
+            actor=user,
+            verb="liked your post",
+            target=post,
+            target_content_type=ContentType.objects.get_for_model(Post)
+        )
+
+        return Response({"message": "Post liked successfully"}, status=HTTP_201_CREATED)
+
+
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        user = request.user
+
+        # Check if the user has liked the post
+        like = Like.objects.filter(post=post, user=user).first()
+        if not like:
+            return Response({"error": "You have not liked this post"}, status=HTTP_400_BAD_REQUEST)
+
+        # Remove the like
+        like.delete()
+
+        return Response({"message": "Post unliked successfully"}, status=HTTP_200_OK)
+
+
+class NotificationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        notifications = Notification.objects.filter(recipient=request.user).order_by('-timestamp')
+        # Optionally, only return unread notifications
+        unread_notifications = notifications.filter(read=False)
+        
+        # Serialize and return notifications (assuming you have a NotificationSerializer)
+        serializer = NotificationSerializer(unread_notifications, many=True)
+        return Response(serializer.data)
+
+class MarkAsReadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        notification = Notification.objects.get(pk=pk, recipient=request.user)
+        notification.read = True
+        notification.save()
+        return Response({"message": "Notification marked as read"}, status=HTTP_200_OK)
